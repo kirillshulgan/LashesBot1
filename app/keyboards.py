@@ -10,6 +10,9 @@ admin_panel = ReplyKeyboardMarkup(resize_keyboard=True)
 admin_panel.add('Добавить товар').add('Удалить товар').add('Сделать рассылку')
 
 catalog_list = InlineKeyboardMarkup(row_width=2)
-catalog_list.add(InlineKeyboardButton(text='Футболки', url='https://google.com'), 
-                 InlineKeyboardButton(text='Шорты', url='https://google.com'), 
-                 InlineKeyboardButton(text='Кроссовки', url='https://google.com'))
+catalog_list.add(InlineKeyboardButton(text='Футболки', callback_data='t-shirt'), 
+                 InlineKeyboardButton(text='Шорты', callback_data='shorts'), 
+                 InlineKeyboardButton(text='Кроссовки', callback_data='sneakers'))
+
+cancel = ReplyKeyboardMarkup(resize_keyboard=True)
+cancel.add('Отмена')
