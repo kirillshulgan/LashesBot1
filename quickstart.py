@@ -84,8 +84,9 @@ def main():
         #-----------------------new---------------------
         
         new_event = create_event('Бровки у Ксюшки', 'Minsk', 'Какое-то описание', convert_to_RFC_datetime(2023,6,12,14,30), convert_to_RFC_datetime(2023,6,12,16,30))
-        event = service.events().insert(calendarId='primary', body=new_event).execute()
+        event = service.events().insert(calendarId='97af92ea5c0ab57ca14db3410ddf5c12e966b87e801f70555bcadc1e9f7c5d17@group.calendar.google.com', body=new_event).execute()
         print(convert_to_RFC_datetime(2023,6,12,14,30))
+        #service.events().delete(calendarId='primary', eventId='').execute()
         #-----------------------new---------------------
         
     except HttpError as error:
