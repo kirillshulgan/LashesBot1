@@ -1,4 +1,5 @@
 from __future__ import print_function
+from pprint import pprint
 
 import datetime
 import os.path
@@ -11,6 +12,9 @@ from googleapiclient.errors import HttpError
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
+id_calendar = '97af92ea5c0ab57ca14db3410ddf5c12e966b87e801f70555bcadc1e9f7c5d17@group.calendar.google.com'
+id_new_event = None
+service = None
 
 event_body = {
   'summary': 'Google I/O 2023',
@@ -81,17 +85,17 @@ def main():
     try:
         service = build('calendar', 'v3', credentials=creds)
 
-        #-----------------------new---------------------
-        
-        new_event = create_event('Бровки у Ксюшки', 'Minsk', 'Какое-то описание', convert_to_RFC_datetime(2023,6,12,14,30), convert_to_RFC_datetime(2023,6,12,16,30))
-        event = service.events().insert(calendarId='97af92ea5c0ab57ca14db3410ddf5c12e966b87e801f70555bcadc1e9f7c5d17@group.calendar.google.com', body=new_event).execute()
-        print(convert_to_RFC_datetime(2023,6,12,14,30))
-        #service.events().delete(calendarId='primary', eventId='').execute()
-        #-----------------------new---------------------
         
     except HttpError as error:
         print('An error occurred: %s' % error)
 
+def create():
+    new_event = create_event('Бровки у Ксюшки', 'Minsk', 'Какое-то описание', convert_to_RFC_datetime(2023,6,12,14,30), convert_to_RFC_datetime(2023,6,12,16,30))
+    event = service.events().insert(calendarId=id_calendar, body=new_event).execute()
+    return event['id']
+    
+def remove(eventId: str):
+    service.events().delete(calendarId=id_calendar, eventId=eventId).execute()
 
 if __name__ == '__main__':
     main()

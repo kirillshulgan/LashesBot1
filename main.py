@@ -15,7 +15,7 @@ bot = Bot(os.getenv('TOKEN'))
 dp = Dispatcher(bot=bot, storage=storage)
 
 async def on_startup(_):
-    await db.db_start()
+    #await db.db_start()
     print('Бот запустился!')
 
 class NewOrder(StatesGroup):
@@ -27,13 +27,33 @@ class NewOrder(StatesGroup):
 
 @dp.message_handler(commands=['start'])
 async def cmd_start(message: types.Message):
-    await db.cmd_start_db(message.from_user.id)
-    await message.answer_sticker('CAACAgIAAxkBAANBZH4tKmVQrh3fVTnjVBO8lGxVn_AAAj8AA0qOGCYXx_2EukGAMS8E')
-    await message.answer(f'{message.from_user.first_name}, добро пожаловать в бот!', reply_markup=kb.main)
+    
+    await message.answer_sticker('CAACAgIAAx0CdDFszQADCmSERtBe_A8aMn7xtDq0Z7TrJkGoAAJfJwACWjBBSoztAi2WnR_nLwQ')
     if message.from_user.id == int(os.getenv('ADMIN_ID')):
-        await message.answer(f'{message.from_user.first_name}, Вы авторизовались как администратор!', reply_markup=kb.main_admin)
+        await message.answer(f'{message.from_user.first_name}, Вы авторизовались как администратор!', reply_markup=kb.main_keyboard)
+    else:
+        await message.answer(f'{message.from_user.first_name}, добро пожаловать в Мой чат-бот для записи клиентов! Нажните на кнопку \"Отправить\" для отправки Вашего номера телефона и завершения регистрации', 
+                             reply_markup=kb.contact_keyboard)
+        
+@dp.message_handler(content_types=types.ContentType.CONTACT)
+async def get_contact(message: types.Message):
+    contact = message.contact
+    await message.answer(f"Спасибо, {contact.full_name}.\n"
+                         f"Регистрация завершена с использованием номера {contact.phone_number}\n"
+                         f"Теперь выберите действие:\n",
+                         reply_markup=kb.main_keyboard)
+    await db.cmd_start_db(message.from_user.id, contact.full_name, contact.phone_number)
 
-@dp.message_handler(commands=['id'])
+@dp.callback_query_handler()
+async def callback_query_keyboard(callback_query: types.CallbackQuery):
+    if callback_query.data == 't-shirt':
+        await bot.send_message(callback_query.from_user.id, text='Вы выбрали футболки!')
+    elif callback_query.data == 'shorts':
+        await bot.send_message(callback_query.from_user.id, text='Вы выбрали шорты!')
+    elif callback_query.data == 'sneakers':
+        await bot.send_message(callback_query.from_user.id, text='Вы выбрали кроссовки!')
+
+""" @dp.message_handler(commands=['id'])
 async def cmd_id(message: types.Message):
     await message.answer(f'{message.from_user.id}')
 
@@ -47,7 +67,7 @@ async def cart(message: types.Message):
 
 @dp.message_handler(text='Контакты')
 async def contacts(message: types.Message):
-    await message.answer(f'Покупать товар у него...')
+    await message.answer(f'Покупать товар у него...') """
 
 @dp.message_handler(text='Админ-панель')
 async def contacts(message: types.Message):

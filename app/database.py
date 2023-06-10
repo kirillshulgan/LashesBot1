@@ -8,10 +8,10 @@ async def db_start():
     cur.execute('CREATE TABLE IF NOT EXISTS items(i_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, desc TEXT, price TEXT, photo TEXT, brand TEXT)')
     db.commit()
 
-async def cmd_start_db(user_id):
-    user = cur.execute('SELECT * FROM accounts WHERE tg_id == {key}'.format(key=user_id)).fetchone()
+async def cmd_start_db(user_id, name, phone):
+    user = cur.execute('SELECT * FROM users WHERE tg_id == {key}'.format(key=user_id)).fetchone()
     if not user:
-        cur.execute('INSERT INTO accounts (tg_id) VALUES ({key})'.format(key=user_id))
+        cur.execute('INSERT INTO users (tg_id, name, phone) VALUES (?, ?, ?)', (user_id, name, phone))
         db.commit()
 
 async def add_item(state):
