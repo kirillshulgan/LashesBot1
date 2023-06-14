@@ -16,7 +16,7 @@ dp = Dispatcher(bot=bot, storage=storage)
 
 async def on_startup(_):
     #await db.db_start()
-    print('Бот запустился!')
+    print('Bot is started!')
 
 class NewOrder(StatesGroup):
     type = State()
